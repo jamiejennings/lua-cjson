@@ -1,3 +1,31 @@
+REPORTED_PLATFORM=$(shell (uname -o || uname -s) 2> /dev/null)
+ifeq ($(REPORTED_PLATFORM), Darwin)
+PLATFORM=macosx
+else ifeq ($(REPORTED_PLATFORM), GNU/Linux)
+PLATFORM=linux
+else
+PLATFORM=none
+endif
+
+PLATFORMS = linux macosx windows
+
+USE_INTERNAL_FPCONV=true
+FPCONV_OBJS=g_fmt.o dtoa.o
+LUA_VERSION=5.3
+PREFIX=../lua 
+
+CJSON_CFLAGS=-std=gnu99 -fPIC -fvisibility=hidden -DMULTIPLE_THREADS -DUSE_INTERNAL_FPCONV
+
+ifeq ($(PLATFORM),macosx)
+CC=cc
+CJSON_LDFLAGS=-dynamiclib -undefined dynamic_lookup
+endif
+ifeq ($(PLATFORM),linux)
+CC=gcc
+CJSON_LDFLAGS=-shared
+endif
+
+
 ##### Available defines for CJSON_CFLAGS #####
 ##
 ## USE_INTERNAL_ISINF:      Workaround for Solaris platforms missing isinf().
@@ -11,13 +39,13 @@
 ##                          multi-threaded application. Requries _pthreads_.
 
 ##### Build defaults #####
-LUA_VERSION =       5.1
+#LUA_VERSION =       5.1
 TARGET =            cjson.so
 PREFIX =            /usr/local
 #CFLAGS =            -g -Wall -pedantic -fno-inline
 CFLAGS =            -O3 -Wall -pedantic -DNDEBUG
-CJSON_CFLAGS =      -fpic
-CJSON_LDFLAGS =     -shared
+#CJSON_CFLAGS =      -fPIC -fvisibility=hidden -DMULTIPLE_THREADS -DUSE_INTERNAL_FPCONV
+#CJSON_LDFLAGS =     -pthread
 LUA_INCLUDE_DIR =   $(PREFIX)/include
 LUA_CMODULE_DIR =   $(PREFIX)/lib/lua/$(LUA_VERSION)
 LUA_MODULE_DIR =    $(PREFIX)/share/lua/$(LUA_VERSION)
@@ -53,7 +81,7 @@ LUA_BIN_DIR =       $(PREFIX)/bin
 ##### Number conversion configuration #####
 
 ## Use Libc support for number conversion (default)
-FPCONV_OBJS =       fpconv.o
+#FPCONV_OBJS =       fpconv.o
 
 ## Use built in number conversion
 #FPCONV_OBJS =       g_fmt.o dtoa.o
@@ -64,8 +92,8 @@ FPCONV_OBJS =       fpconv.o
 
 ## Compile built in number conversion to support multi-threaded
 ## applications (recommended)
-CJSON_CFLAGS +=     -pthread -DMULTIPLE_THREADS
-CJSON_LDFLAGS +=    -pthread
+#CJSON_CFLAGS +=     -pthread -DMULTIPLE_THREADS
+#CJSON_LDFLAGS +=    -pthread
 
 ##### End customisable sections #####
 
