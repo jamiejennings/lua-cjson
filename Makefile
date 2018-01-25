@@ -11,7 +11,7 @@ PLATFORMS = linux macosx windows
 
 USE_INTERNAL_FPCONV=true
 FPCONV_OBJS=g_fmt.o dtoa.o
-PREFIX=../lua 
+PREFIX=../lua
 
 CJSON_CFLAGS=-std=gnu99 -fPIC -fvisibility=hidden -DUSE_INTERNAL_FPCONV
 
@@ -68,7 +68,7 @@ EXECPERM =          755
 
 ASCIIDOC =          asciidoc
 
-BUILD_CFLAGS =      "-I$(LUA_INCLUDE_DIR)" $(CJSON_CFLAGS)
+BUILD_CFLAGS =      -I$(LUA_INCLUDE_DIR) $(CJSON_CFLAGS)
 OBJS =              lua_cjson.o strbuf.o $(FPCONV_OBJS)
 
 .PHONY: all clean install install-extra doc
