@@ -68,7 +68,7 @@ EXECPERM =          755
 
 ASCIIDOC =          asciidoc
 
-BUILD_CFLAGS =      -I$(LUA_INCLUDE_DIR) $(CJSON_CFLAGS)
+BUILD_CFLAGS =      "-I$(LUA_INCLUDE_DIR)" $(CJSON_CFLAGS)
 OBJS =              lua_cjson.o strbuf.o $(FPCONV_OBJS)
 
 .PHONY: all clean install install-extra doc
